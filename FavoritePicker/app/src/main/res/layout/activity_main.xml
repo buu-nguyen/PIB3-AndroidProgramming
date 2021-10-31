@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/background"
+        android:layout_width="409dp"
+        android:layout_height="729dp"
+        android:orientation="vertical"
+        android:gravity="top|center_horizontal"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="1dp">
+
+        <Button
+            android:id="@+id/btnGoogle"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Google" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="200dp"
+            android:layout_height="30dp"
+            android:text="My favorite color is:"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txtColor"
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:text="COLOR"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btnColor"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Pick color" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="200dp"
+            android:layout_height="30dp"
+            android:text="My BFF is:"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txtBFF"
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:text="BFF"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btnBFF"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Pick BFF" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
