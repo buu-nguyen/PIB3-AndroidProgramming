@@ -5,5 +5,4 @@
         android:id="@+id/btnEditName"
         android:title="EDIT NAME"
         app:showAsAction="always" />
-
 </menu>

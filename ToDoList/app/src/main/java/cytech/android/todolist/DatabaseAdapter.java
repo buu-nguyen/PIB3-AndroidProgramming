@@ -1,11 +1,14 @@
 package cytech.android.todolist;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
+import android.os.Environment;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
@@ -16,9 +19,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class DatabaseAdapter {
 
@@ -30,6 +40,81 @@ public class DatabaseAdapter {
         helper = new DatabaseHelper(context);
         db = helper.getWritableDatabase();
         this.context = context;
+    }
+
+    public boolean exportDatabase() {
+        /**First of all we check if the external storage of the device is available for writing.
+         * Remember that the external storage is not necessarily the sd card. Very often it is
+         * the device storage.
+         */
+        String state = Environment.getExternalStorageState();
+        if (!Environment.MEDIA_MOUNTED.equals(state)) {
+            return false;
+        }
+        else {
+            //We use the Download directory for saving our .csv file.
+            File exportDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            if (!exportDir.exists())
+            {
+                exportDir.mkdirs();
+            }
+            File file = new File(exportDir, "Tasks.csv");
+            try
+            {
+                file.createNewFile();
+                CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
+                Cursor curCSV = reloadCursor();
+                //Write the name of the table and the name of the columns (comma separated values) in the .csv file.
+                csvWrite.writeNext(curCSV.getColumnNames());
+                while(curCSV.moveToNext())
+                {
+                    //Which column you want to export
+                    String arrStr[] ={curCSV.getString(0),curCSV.getString(1)};
+                    csvWrite.writeNext(arrStr);
+                }
+                csvWrite.close();
+                curCSV.close();
+            }
+            catch(Exception exc) {
+                //if there are any exceptions, return false
+                return false;
+            }
+            //If there are no errors, return true.
+            return true;
+        }
+    }
+
+    public boolean importDatabase(Uri uri){
+        /**First of all we check if the external storage of the device is available for writing.
+         * Remember that the external storage is not necessarily the sd card. Very often it is
+         * the device storage.
+         */
+        String state = Environment.getExternalStorageState();
+        if (!Environment.MEDIA_MOUNTED.equals(state)) {
+            return false;
+        }
+        else {
+            db.beginTransaction();
+            try {
+                // Read from csv file
+                InputStream inputStream = context.getContentResolver().openInputStream(uri);
+                CSVReader csvReader = new CSVReader(new InputStreamReader(inputStream));
+                String[] line = csvReader.readNext();
+                while ((line = csvReader.readNext()) != null) {
+                    ContentValues values = new ContentValues();
+                    values.put(DatabaseHelper.KEY_NAME, line[1]);
+                    db.insert(DatabaseHelper.TABLE_NAME, null, values);
+                }
+            }
+            catch(Exception exc) {
+                //if there are any exceptions, return false
+                return false;
+            }
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            //If there are no errors, return true.
+            return true;
+        }
     }
 
     public Cursor reloadCursor(){

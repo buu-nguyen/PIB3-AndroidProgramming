@@ -1,10 +1,11 @@
 package cytech.android.todolist;
 
-import static cytech.android.todolist.Backup.exportDB;
-
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,13 +24,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int PICK_FILE_RESULT_CODE = 1;
     DatabaseAdapter databaseAdapter;
     ListView taskView;
     FloatingActionButton btnAdd;
     SimpleCursorAdapter adapter;
     Runnable updateView;
     SharedPreferences sp;
-    Button btnImport, btnExport;
+    Button btnBackup;
+    String src;
 
     // create an action bar button
     @Override
@@ -91,25 +94,85 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-        // Export
-        btnExport = findViewById(R.id.btnExport);
-        btnExport.setOnClickListener(new View.OnClickListener() {
+        // Backup
+        btnBackup = findViewById(R.id.btnBackup);
+        btnBackup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Context context = v.getRootView().getContext();
-                exportDB(context);
+                //Create a dialog
+                new AlertDialog.Builder(context)
+                        .setTitle("Confirm")
+                        .setMessage("Export your ToDo List?")
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                // Export task
+                                boolean exportSuccessful = databaseAdapter.exportDatabase();
+                                if(exportSuccessful){
+                                    Toast.makeText(context, "Export successfully.", Toast.LENGTH_SHORT).show();
+                                    runOnUiThread(updateView);
+                                }else{
+                                    Toast.makeText(context, "Unable to export.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Do nothing
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
             }
         });
-        // Import
-        btnImport = findViewById(R.id.btnImport);
-        btnImport.setOnClickListener(new View.OnClickListener() {
+        btnBackup.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onLongClick(View v) {
                 Context context = v.getRootView().getContext();
-//                importDB(context);
-                Toast.makeText(context, "IMPORTED", Toast.LENGTH_SHORT).show();
+                //Create a dialog
+                new AlertDialog.Builder(context)
+                        .setTitle("Confirm")
+                        .setMessage("Import into your ToDo List?")
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                // Import task
+                                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                                intent.setType("text/comma-separated-values");
+                                startActivityForResult(Intent.createChooser(intent, "Import:"), PICK_FILE_RESULT_CODE);
+                            }
+                        })
+                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Do nothing
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+
+                return false;
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case (PICK_FILE_RESULT_CODE):
+                if (resultCode == Activity.RESULT_OK) {
+                    // File path contain garbage path before storage
+                    Uri uri = data.getData();
+                    if (databaseAdapter.importDatabase(uri)) {
+                        Toast.makeText(this, "Import successfully.", Toast.LENGTH_SHORT).show();
+                        runOnUiThread(updateView);
+                    }
+                }
+        }
     }
 
     private void updateName(MainActivity activity) {
@@ -184,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
         //Create a dialog
         new AlertDialog.Builder(context)
                 .setTitle("Confirm")
-                .setMessage("Do you want to delete this task?")
+                .setMessage("Delete this task?")
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
