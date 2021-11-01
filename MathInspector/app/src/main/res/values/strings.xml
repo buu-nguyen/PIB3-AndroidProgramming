@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">MathInspector</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">Math Inspector</string>
+    <string name="about">This app has been developed by Buu NGUYEN - CY Tech 2021</string>
+    <string name="about_title">About Math Inspector</string>
+    <string name="userguide">Click on button to investigate\nLong press to change divisor</string>
+    <string name="userguide_title">User Guide</string>
+    <string name="userguideBtn">USER GUIDE</string>
 </resources>
