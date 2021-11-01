@@ -1,4 +1,4 @@
-package cytech.android.currencyconverter;
+package cytech.android.favoritepicker;
 
 import androidx.appcompat.app.AppCompatActivity;
 

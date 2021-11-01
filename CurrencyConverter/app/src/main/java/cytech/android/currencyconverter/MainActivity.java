@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
         editTxtFromSpinner = findViewById(R.id.editTxtFromSpinner);
         editTxtToSpinner = findViewById(R.id.editTxtToSpinner);
         checkReverse = findViewById(R.id.checkReverse);
-
         // When user select a List-Item
         this.spinnerFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 

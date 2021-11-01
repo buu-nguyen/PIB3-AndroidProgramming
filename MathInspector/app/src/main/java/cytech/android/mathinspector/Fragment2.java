@@ -38,10 +38,10 @@ public class Fragment2 extends Fragment {
                     int value = Integer.parseInt(str_value);
                     if ((target != 0) && (value % target == 0)){
                         int temp = value / target;
-                        Toast.makeText(view.getContext(), "YES, "+ value +" is a multiple of "+target +"\n"+target+" * "+temp+" = "+value, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(view.getContext(), getResources().getString(R.string.yes)+ value +getResources().getString(R.string.is_multiple_of)+target +"\n"+target+" * "+temp+" = "+value, Toast.LENGTH_SHORT).show();
                     }
                     else{
-                        Toast.makeText(view.getContext(), "NO, "+ value +" is not a multiple of "+target, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(view.getContext(), getResources().getString(R.string.no)+ value +getResources().getString(R.string.not_multiple_of)+target, Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -58,7 +58,7 @@ public class Fragment2 extends Fragment {
                 new AlertDialog.Builder(context)
                         .setView(formElementsView)
                         .setTitle(R.string.userguide_title)
-                        .setPositiveButton("Close",
+                        .setPositiveButton(R.string.close,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
@@ -76,7 +76,7 @@ public class Fragment2 extends Fragment {
     public void receiveMessage(String data, int type) {
         switch (type){
             case 1:
-                String text = "MULTIPLE OF " + data + "?";
+                String text = getResources().getString(R.string.multiple_of) + data + "?";
                 btnCheck.setText(text);
                 target = Integer.parseInt(data);
                 break;
@@ -109,7 +109,7 @@ public class Fragment2 extends Fragment {
         // This bundle has also been passed to onCreate.
         if (savedInstanceState != null){
             target = savedInstanceState.getInt("target");
-            String text = "MULTIPLE OF " + target + "?";
+            String text = getResources().getString(R.string.multiple_of) + target + "?";
             btnCheck.setText(text);
         }
     }

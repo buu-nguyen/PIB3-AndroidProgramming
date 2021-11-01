@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Math Inspecteur</string>
+    <string name="about">Cette application a été développée par Buu NGUYEN - CY Tech 2021</string>
+    <string name="not_multiple_of">" n'est pas un multiple de "</string>
+    <string name="is_multiple_of">" est un multiple de "</string>
+    <string name="no">"NON, "</string>
+    <string name="yes">"OUI, "</string>
+    <string name="multiple_of">"MULTIPLE DE "</string>
+    <string name="close">Fermer</string>
+    <string name="multiple_of_1">MULTIPLE DE 1?</string>
+    <string name="about_menu">À propos</string>
+    <string name="userguideBtn">MODE D\'EMPLOI</string>
+    <string name="userguide_title">Mode d\'emploi</string>
+    <string name="userguide">Cliquez sur le bouton pour enquêter\nAppuyez longuement pour changer le diviseur</string>
+    <string name="about_title">À propos Math Inspecteur</string>
+</resources>

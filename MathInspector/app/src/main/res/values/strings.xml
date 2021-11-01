@@ -1,8 +1,16 @@
 <resources>
-    <string name="app_name">Math Inspector</string>
-    <string name="about">This app has been developed by Buu NGUYEN - CY Tech 2021</string>
     <string name="about_title">About Math Inspector</string>
     <string name="userguide">Click on button to investigate\nLong press to change divisor</string>
     <string name="userguide_title">User Guide</string>
     <string name="userguideBtn">USER GUIDE</string>
+    <string name="about_menu">About</string>
+    <string name="multiple_of_1">MULTIPLE OF 1?</string>
+    <string name="close">Close</string>
+    <string name="multiple_of">"MULTIPLE OF "</string>
+    <string name="yes">"YES, "</string>
+    <string name="no">"NO, "</string>
+    <string name="is_multiple_of">" is a multiple of "</string>
+    <string name="not_multiple_of">" is not a multiple of "</string>
+    <string name="app_name">Math Inspector</string>
+    <string name="about">This app has been developed by Buu NGUYEN - CY Tech 2021</string>
 </resources>

@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements Fragment1.OnFragm
             new AlertDialog.Builder(this)
                     .setView(formElementsView)
                     .setTitle(R.string.about_title)
-                    .setPositiveButton("Close",
+                    .setPositiveButton(R.string.close,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
