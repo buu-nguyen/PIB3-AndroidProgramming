@@ -13,11 +13,28 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Cache;
+import com.android.volley.Network;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     Double[] FromUSDRatios = {1.0, 1.16, 0.16, 1.1, 0.75};
     Double[] ToUSDRatios = {1.0, 0.86, 6.4, 0.91, 1.33};
     EditText editTxtFrom, editTxtFromSpinner, editTxtToSpinner;
-    TextView txtTo;
+    TextView txtTo, textView;
     Button btnConvert;
     RadioGroup radioGroupFrom, radioGroupTo;
     RadioButton radioBtnFrom, radioBtnTo;
@@ -33,28 +50,56 @@ public class MainActivity extends AppCompatActivity {
     CheckBox checkReverse;
     double ratioFrom, ratioTo;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getExchangeRate();
+        // Get exchange rates from online API
+        textView = findViewById(R.id.textView);
+        getExchangeRates();
+
         addListenerOnButton();
         addListenerOnSpinner();
+
     }
 
-    private void getExchangeRate() {
-        String access_key = "fd2f82626077aab9466e82d4742a6e85";
-        String url = "http://api.exchangeratesapi.io/v1/latest?access_key="+access_key+"&symbols=USD,EUR,CNY,CHF,AUD&format=1";
-        try {
-            String in = new HttpGetRequest().execute(url).get();
-            JSONObject rates = new JSONObject(in).getJSONObject("rates");
+    private void getExchangeRates() {
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://api.exchangeratesapi.io/v1/latest?access_key=fd2f82626077aab9466e82d4742a6e85&symbols=USD,EUR,CNY,CHF,AUD";
 
-        } catch (ExecutionException | InterruptedException | JSONException e) {
-            e.printStackTrace();
-        }
+        // Request a JSON response from the provided URL.
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject rates = response.getJSONObject("rates");
+                            JSONArray key = rates.names();
+                            for (int i = 0; i < key.length(); ++i) {
+                                String keys = key.getString(i);
+                                double value = Double.parseDouble(rates.getString(keys));
+                                FromUSDRatios[i] = value;
+                                ToUSDRatios[i] = 1 / value;
+                                textView.setText("Online mode");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        textView.setText("Offline mode");
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        queue.add(jsonObjectRequest);
     }
 
     public void addListenerOnButton(){
