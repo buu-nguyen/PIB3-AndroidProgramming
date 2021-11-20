@@ -1,7 +1,7 @@
 #include <jni.h>
 #include <string>
 
-int Fibonacci(int x) {
+long Fibonacci(int x) {
     if((x==1)||(x==0)) {
         return(x);
     }else {
@@ -10,8 +10,9 @@ int Fibonacci(int x) {
 }
 
 extern "C"
-JNIEXPORT jint JNICALL
-Java_cytech_android_fibonacci_MainActivity_Fibonacci(JNIEnv *env, jobject thiz, jint i) {
+JNIEXPORT jlong JNICALL
+Java_cytech_android_fibonacci_MainActivity_JNIFibonacci
+(JNIEnv *env, jobject thiz, jint i) {
     // TODO: implement Fibonacci()
     return Fibonacci(i);
 }

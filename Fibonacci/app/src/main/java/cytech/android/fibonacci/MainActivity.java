@@ -34,6 +34,11 @@ public class MainActivity extends AppCompatActivity {
         textViewResult = binding.textViewResult;
         textViewRuntime = binding.textViewRuntime;
         editTextNumber = binding.editTextNumber;
+
+        addButtonListener();
+    }
+
+    private void addButtonListener() {
         buttonJava = binding.buttonJava;
         buttonKotlin = binding.buttonKotlin;
         buttonJNI = binding.buttonJNI;
@@ -44,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 long begin = System.nanoTime();
-                int n = Java.Fibonacci(Integer.parseInt(editTextNumber.getText().toString()));
+                long n = Java.Fibonacci(Integer.parseInt(editTextNumber.getText().toString()));
                 String result = "Result: " + n;
                 String time = "Runtime: " + (System.nanoTime() - begin) * 1.0 / 1000000000 + " s";
                 textViewResult.setText(result);
@@ -57,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 long begin = System.nanoTime();
-                int n = KotlinKt.Fibonacci(Integer.parseInt(editTextNumber.getText().toString()));
+                long n = KotlinKt.Fibonacci(Integer.parseInt(editTextNumber.getText().toString()));
                 String result = "Result: " + n;
                 String time = "Runtime: " + (System.nanoTime() - begin) * 1.0 / 1000000000 + " s";
                 textViewResult.setText(result);
@@ -70,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 long begin = System.nanoTime();
-                int n = Fibonacci(Integer.parseInt(editTextNumber.getText().toString()));
+                long n = JNIFibonacci(Integer.parseInt(editTextNumber.getText().toString()));
                 String result = "Result: " + n;
                 String time = "Runtime: " + (System.nanoTime() - begin) * 1.0 / 1000000000 + " s";
                 textViewResult.setText(result);
@@ -98,5 +103,5 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // JNI function
-    public native int Fibonacci(int i);
+    public native long JNIFibonacci(int i);
 }

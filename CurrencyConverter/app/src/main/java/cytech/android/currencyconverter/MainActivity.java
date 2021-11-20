@@ -14,7 +14,11 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
     String[] CurrencyCodes = {"USD", "EUR", "RMB", "CHF", "AUD"};
@@ -35,8 +39,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getExchangeRate();
         addListenerOnButton();
         addListenerOnSpinner();
+    }
+
+    private void getExchangeRate() {
+        String access_key = "fd2f82626077aab9466e82d4742a6e85";
+        String url = "http://api.exchangeratesapi.io/v1/latest?access_key="+access_key+"&symbols=USD,EUR,CNY,CHF,AUD&format=1";
+        try {
+            String in = new HttpGetRequest().execute(url).get();
+            JSONObject rates = new JSONObject(in).getJSONObject("rates");
+
+        } catch (ExecutionException | InterruptedException | JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void addListenerOnButton(){
