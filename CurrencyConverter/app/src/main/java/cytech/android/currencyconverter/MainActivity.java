@@ -39,10 +39,10 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
     String[] CurrencyCodes = {"USD", "EUR", "RMB", "CHF", "AUD"};
-    Double[] FromUSDRatios = {1.0, 1.16, 0.16, 1.1, 0.75};
-    Double[] ToUSDRatios = {1.0, 0.86, 6.4, 0.91, 1.33};
+    Double[] FromUSDRatios = {1.0, 1.0, 1.0, 1.0, 1.0};
+    Double[] ToUSDRatios = {1.0, 1.0, 1.0, 1.0, 1.0};
     EditText editTxtFrom, editTxtFromSpinner, editTxtToSpinner;
-    TextView txtTo, textView;
+    TextView txtTo;
     Button btnConvert;
     RadioGroup radioGroupFrom, radioGroupTo;
     RadioButton radioBtnFrom, radioBtnTo;
@@ -56,12 +56,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Get exchange rates from online API
-        textView = findViewById(R.id.textView);
         getExchangeRates();
 
         addListenerOnButton();
         addListenerOnSpinner();
-
     }
 
     private void getExchangeRates() {
@@ -83,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
                                 double value = Double.parseDouble(rates.getString(keys));
                                 FromUSDRatios[i] = value;
                                 ToUSDRatios[i] = 1 / value;
-                                textView.setText("Online mode");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -94,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        textView.setText("Offline mode");
+                        Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
